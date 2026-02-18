@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Todo App</title>
+</head>
+<body>
+    <h2>Edit Todo</h2>
+
+    <form action="POST" th:action="@{/save}" th:object="${todo}">
+        <input type="hidden" th:field="*{id}">
+        <input type="text" th:field="*{title}" required>
+        <label>
+            Completed:
+            <input type="checkbox" th:field="*{completed}">
+        </label>
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>
