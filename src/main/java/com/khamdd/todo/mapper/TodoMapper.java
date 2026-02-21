@@ -8,6 +8,9 @@ import com.khamdd.todo.model.Todo;
 public class TodoMapper {
     public static TodoResponseDTO toDto(Todo todo) {
         TodoResponseDTO dto = new TodoResponseDTO();
+        if (todo.getId() != null) {
+            dto.setId(todo.getId().toString());
+        }
         dto.setTitle(todo.getTitle());
         dto.setCreatedDate(todo.getCreatedDate().toString());
         dto.setDueDate(todo.getDueDate().toString());

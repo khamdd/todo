@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.khamdd.todo.dto.TodoResponseDTO;
+import com.khamdd.todo.mapper.TodoMapper;
 import com.khamdd.todo.model.Todo;
 import com.khamdd.todo.repository.TodoRepository;
 
@@ -16,13 +18,13 @@ public class TodoService {
         this.todoRepository = todoRepository;
     }
 
-    public List<Todo> getAllTodos() {
-        // List<Todo> todos = todoRepository.findAll();
-        // List<TodoResponseDTO> todoResponseDTOs = todos.stream()
-        //     .map(TodoMapper::toDto)
-        //     .toList();
+    public List<TodoResponseDTO> getAllTodos() {
+        List<Todo> todos = todoRepository.findAll();
+        List<TodoResponseDTO> todoResponseDTOs = todos.stream()
+            .map(TodoMapper::toDto)
+            .toList();
 
-        return todoRepository.findAll();
+        return todoResponseDTOs;
     }
 
     public void saveTodo(Todo todo) {
@@ -30,7 +32,8 @@ public class TodoService {
     }
 
     public void deleteTodoById(UUID id) {
-        todoRepository.deleteById(id);
+        Todo todo = todoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Todo not found with id: " + id));
+        todoRepository.delete(todo);
     }
 
     public Todo getTodoById(UUID id) {

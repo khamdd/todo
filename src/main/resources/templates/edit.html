@@ -2,16 +2,48 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Todo App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        input[type="text"], button {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
 </head>
 <body>
     <h2>Edit Todo</h2>
-
-    <form action="POST" th:action="@{/save}" th:object="${todo}">
+    <form th:action="@{/update}" th:object="${todo}" method="post">
         <input type="hidden" th:field="*{id}">
-        <input type="text" th:field="*{title}" required>
+        <input type="text" th:field="*{title}" placeholder="Enter title" required>
         <label>
-            Completed:
             <input type="checkbox" th:field="*{completed}">
+            Completed
         </label>
         <button type="submit">Update</button>
     </form>

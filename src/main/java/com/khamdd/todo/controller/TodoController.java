@@ -1,5 +1,6 @@
 package com.khamdd.todo.controller;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
@@ -8,10 +9,10 @@ import org.springframework.ui.Model;
 import com.khamdd.todo.model.Todo;
 import com.khamdd.todo.service.TodoService;
 
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class TodoController {
@@ -28,15 +29,50 @@ public class TodoController {
         return "index";
     }
 
-    @GetMapping("/save")
-    public String saveTodo(@ModelAttribute Todo todo) {
+    @PostMapping("/add")
+    public String addTodo(@ModelAttribute Todo todo, Model model) {
+        if (todo.getDueDate() != null && todo.getDueDate().isBefore(LocalDate.now())) {
+            model.addAttribute("error", "Due date cannot be before today");
+            model.addAttribute("listTodos", todoService.getAllTodos());
+            return "index";
+        }
+        todo.setCompleted(false);
+        todo.setCreatedDate(LocalDate.now());
         todoService.saveTodo(todo);
+        return "redirect:/";
+    }
+
+    @PostMapping("/update")
+    public String updateTodo(@ModelAttribute Todo todo) {
+        if(todo.getId() == null) {
+            return "redirect:/";
+        }
+
+        Todo existingTodo = todoService.getTodoById(todo.getId());
+        if (existingTodo == null) {
+            return "redirect:/";
+        }
+
+        existingTodo.setTitle(todo.getTitle());
+        existingTodo.setCompleted(todo.getCompleted());
+
+        todoService.saveTodo(existingTodo);
         return "redirect:/";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteTodo(@PathVariable UUID id) {
         todoService.deleteTodoById(id);
+        return "redirect:/";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editTodo(@PathVariable UUID id, Model model) {
+        Todo todo = todoService.getTodoById(id);
+        if (todo != null) {
+            model.addAttribute("todo", todo);
+            return "edit";
+        }
         return "redirect:/";
     }
 }

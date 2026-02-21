@@ -2,33 +2,110 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Todo App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #764ba2;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        a {
+            color: #667eea;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Todo List</h1>
+    <div class="container">
+        <h1>Todo List</h1>
 
-    <form th:action="@{/save}" th:object="${todo}" method="POST">
-        <input type="text" th:field="*{title}" placeholder="Enter todo title" required />
-        <button type="submit">Add</button>
-    </form>
-    
-    <br/>
+        <form th:action="@{/add}" th:object="${todo}" method="post">
+            <input type="text" th:field="*{title}" placeholder="Enter todo title" required/>
+            <input type="date" th:field="*{dueDate}" required/>
+            <button type="submit">Add Todo</button>
+        </form>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Completed</th>
-            <th>Actions</th>
-        </tr>
-        <tr th:each="todo : ${listTodos}">
-            <td th:text="${todo.id}"></td>
-            <td th:text="${todo.title}"></td>
-            <td th:text="${todo.completed}"></td>
-            <td>
-                <a th:href="@{/edit/{id}(id=${todo.id})}">Edit</a>
-                <a th:href="@{/delete/{id}(id=${todo.id})}">Delete</a>
-        </tr>
-    </table>
-    
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Completed</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="todo, stat : ${listTodos}">
+                    <td th:text="${stat.count}"></td>
+                    <td th:text="${todo.title}"></td>
+                    <td th:text="${todo.completed} ? 'Completed' : 'Not Completed'"></td>
+                    <td>
+                        <a th:href="@{/edit/{id}(id=${todo.id})}">Edit</a>
+                        <a th:href="@{/delete/{id}(id=${todo.id})}">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
