@@ -14,7 +14,7 @@
             flex-direction: column;
             gap: 15px;
         }
-        input[type="text"], button {
+        input[type="text"], input[type="datetime-local"], button {
             padding: 10px;
             border-radius: 4px;
             border: 1px solid #ddd;
@@ -41,6 +41,7 @@
     <form th:action="@{/update}" th:object="${todo}" method="post">
         <input type="hidden" th:field="*{id}">
         <input type="text" th:field="*{title}" placeholder="Enter title" required>
+        <input type="datetime-local" th:field="*{dueDate}" placeholder="Enter due date and time" required>
         <label>
             <input type="checkbox" th:field="*{completed}">
             Completed

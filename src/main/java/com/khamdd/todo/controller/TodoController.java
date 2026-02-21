@@ -1,6 +1,6 @@
 package com.khamdd.todo.controller;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
@@ -31,13 +31,13 @@ public class TodoController {
 
     @PostMapping("/add")
     public String addTodo(@ModelAttribute Todo todo, Model model) {
-        if (todo.getDueDate() != null && todo.getDueDate().isBefore(LocalDate.now())) {
-            model.addAttribute("error", "Due date cannot be before today");
+        if (todo.getDueDate() != null && todo.getDueDate().isBefore(LocalDateTime.now())) {
+            model.addAttribute("error", "Due date and time cannot be in the past");
             model.addAttribute("listTodos", todoService.getAllTodos());
             return "index";
         }
         todo.setCompleted(false);
-        todo.setCreatedDate(LocalDate.now());
+        todo.setCreatedDate(LocalDateTime.now());
         todoService.saveTodo(todo);
         return "redirect:/";
     }
@@ -54,6 +54,7 @@ public class TodoController {
         }
 
         existingTodo.setTitle(todo.getTitle());
+        existingTodo.setDueDate(todo.getDueDate());
         existingTodo.setCompleted(todo.getCompleted());
 
         todoService.saveTodo(existingTodo);
